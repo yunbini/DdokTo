@@ -1,15 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
 
-function PaddingBox({children}){
+function PaddingBox({children,padding}){
     const StyledBox = styled.div`
-        padding:200px 60px;
+        padding:${props => props.padding || '90px 60px'};
         text-align:center;
-
-        
     `
     return(
-        <StyledBox>
+        <StyledBox padding={padding}>
             {children}
         </StyledBox>
     )
