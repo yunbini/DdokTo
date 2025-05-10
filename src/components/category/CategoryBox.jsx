@@ -1,8 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-function CategoryBox({category}){
-    const OutBox = styled.div`
+const OutBox = styled.div`
         width:201px; height:313px;
         border-radius: 12px;
         background-color: #FFF5A7;
@@ -15,16 +14,20 @@ function CategoryBox({category}){
         border-radius: 19px;
         background-color: #FFD558;
         margin: 0 auto;
+        padding:20px;
     `
     const StyledP = styled.p`
         margin: 10px 0 15px;
         font-size:24px;
     `
+
+function CategoryBox({category,children,onClick}){
+
     return(
         <>
-        <OutBox>
+        <OutBox onClick={onClick}>
             <StyledP>{category}</StyledP>
-            <InBox />
+            <InBox>{children}</InBox>
         </OutBox>
         </>
     )

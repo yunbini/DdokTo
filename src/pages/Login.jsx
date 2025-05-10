@@ -1,7 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import styled from "styled-components";
 import InputBox from "../components/Login/InputBox";
 import PaddingBox from "../components/PaddingBox";
 import SubmitBtn from "../components/Login/SubmitBtn";

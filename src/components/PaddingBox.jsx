@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 const StyledBox = styled.div`
-        padding:${props => props.padding || '90px 60px'};
+        padding: ${props => props.padding || '90px 60px'};
         text-align:center;
     `
 
