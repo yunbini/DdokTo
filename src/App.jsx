@@ -8,6 +8,9 @@ import MultiChoiceFalse from './pages/MultiChoiceFalse';
 import MultiChoiceSuc from './pages/MultiChoiceSuc';
 import WordMultiChoice from './pages/WordMultiChoice';
 import SentenMultiChoice from './pages/SentenMultiChoice';
+import Login from './pages/Login';
+import Register from './pages/Register';
+
 function App() {
   return (
     <>
@@ -20,6 +23,8 @@ function App() {
             <Route path="/MultiChoFalse" element={<MultiChoiceFalse />} />
             <Route path="/MultiChoSuc" element={<MultiChoiceSuc />}/>
             <Route path="/SentenMultiCho" element={<SentenMultiChoice />} />
+            <Route path="/Login" element={<Login />} />
+            <Route path="/Register" element={<Register />} />
           </Routes>
       </BrowserRouter>
     </>
