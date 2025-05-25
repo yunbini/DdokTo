@@ -4,6 +4,8 @@ import styled from "styled-components";
 import CategoryBox from "../components/category/CategoryBox";
 import PaddingBox from "../components/PaddingBox";
 import axios from "axios";
+import ChatBot from "./ChatBot";
+import { useNavigate } from "react-router-dom";
 
 const StyledBack = styled.div`
         background-color:#F3FF89;
@@ -16,21 +18,11 @@ const StyledBack = styled.div`
     `
 
 function Category(){
+
+    const navigate = useNavigate();
     
-    const CateSubmit = async(category) => {
-        console.log(1);
-        
-        try{
-            const response = await axios.post('https://server-gxfs.onrender.com/chat/start_chat',
-                {category: category}
-            );
-            console.log('사용자 등록:',response.data);
-            alert('카테고리 전달 완');
-        }
-        catch(error){
-            console.error('사용자 등록 에러:',error);
-            alert('카테고리 전달 실패')
-        }
+    const CateSubmit = (category) => {
+        navigate('/ChatBot',{state:{category}})
     }
 
 
