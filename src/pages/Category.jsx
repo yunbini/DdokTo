@@ -1,11 +1,8 @@
-import React from "react";
 import StandingRabit from "../assets/standingRabit.png"
 import styled from "styled-components";
 import CategoryBox from "../components/category/CategoryBox";
 import PaddingBox from "../components/PaddingBox";
-import axios from "axios";
-import ChatBot from "./ChatBot";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useLocation } from "react-router-dom";
 
 const StyledBack = styled.div`
         background-color:#F3FF89;
@@ -20,9 +17,12 @@ const StyledBack = styled.div`
 function Category(){
 
     const navigate = useNavigate();
+
+    const location = useLocation();
+    const userId = location.state;
     
     const CateSubmit = (category) => {
-        navigate('/ChatBot',{state:{category}})
+        navigate('/ChatBot',{state:{category,userId}})
     }
 
 

@@ -1,5 +1,4 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useLocation } from "react-router-dom";
 import axios from "axios";
 import InputBox from "../components/Login/InputBox";
 import PaddingBox from "../components/PaddingBox";
@@ -39,8 +38,9 @@ function Login(){
             );
             // 성공적인 응답 처리
             console.log('사용자 등록:', response.data);
+            const user_id = response.data.user_id;
             alert("로그인이 완료되었습니다.");
-            navigate("/Category");
+            navigate("/Category",{state:{user_id}});
         } catch (error) {
             // 에러 처리
             console.error('사용자 등록 에러:', error);

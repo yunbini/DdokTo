@@ -46,19 +46,19 @@ const MessageWrapper = styled.div`
 function ChatBot(){
     const navigate = useNavigate();
     const location = useLocation();
-    const category = location.state;
+    const {category,userId} = location.state
     const [messages,setMessages] = useState([]);
     const [predictGrade,setPredictGrade] = useState({
         answers:[]
     });
     const [form,setForm] = useState({
         answer:"",
-        category:category.category
+        category:category
     });
 
     const StartChat = async() =>{
             try{
-            const response = await axios.post('https://server-gxfs.onrender.com/chat/start_chat',category);
+            const response = await axios.post('https://server-gxfs.onrender.com/chat/start_chat',{category});
              console.log('사용자 등록:',response.data);
              setMessages([{sender:"bot",text: response.data.question}])
             
@@ -102,10 +102,11 @@ function ChatBot(){
                 botMessage = {sender:"bot",text:response.data.ending_message};
                 setMessages([...newMessage,botMessage]);
 
-                await axios.post('https://server-gxfs.onrender.com/grade/predict_grade_bulk', {
+                const res = await axios.post('https://server-gxfs.onrender.com/grade/predict_grade_bulk', {
                     answers: userMessages
                 });
-                navigate("/WordMultiCho");
+                const level = res.data.label_index === 1 ? 3 : 1;
+                navigate("/WordMultiCho",{state:{category,level,userId}});
             }
 
             setForm({...form,answer:""});
