@@ -1,4 +1,3 @@
-// import MultiChoice from "../components/multiChoice/MultiChoice";
 import { useEffect,useState } from "react";
 import { useNavigate,useLocation } from "react-router-dom";
 import axios from "axios";
@@ -31,10 +30,13 @@ function WordMultiChoice(){
     const navigate = useNavigate();
     const { level, category, userId } = location.state || {};
 
-    const [quizList,setQuizList] = useState([])
+    const [quizList,setQuizList] = useState([]);
+    const [wordList,setWordList] = useState([]);
     const [currentIndex,setCurrentIndex] = useState(0);
     const [score,setScore] = useState(0);
     const [loading,setLoading] = useState(true);
+
+    console.log(userId);
 
     useEffect(()=>{
            const StudyWords = async() =>{
@@ -70,6 +72,9 @@ function WordMultiChoice(){
         const isCorrect = selectedIndex === currentQuiz.answer_index;
 
         const nextScore = isCorrect ? score+1 : score;
+        const StudyWord = currentQuiz.word;
+        const newStudyWord = [...wordList,StudyWord];
+
 
         try{
             const res = await axios.post('https://server-gxfs.onrender.com/api/quiz/submit',{
@@ -84,7 +89,9 @@ function WordMultiChoice(){
             }
 
         )
+        
         console.log(res);
+
         }
          catch(err){
                 console.log(err);
@@ -92,13 +99,14 @@ function WordMultiChoice(){
 
         if (currentIndex + 1 === quizList.length) {
         if (nextScore === 10) {
-            navigate("/MultiChoSuc", { state: { score: nextScore } });
+            navigate("/MultiChoSuc", { state: { score: nextScore, words: newStudyWord, level:level, category:category, user_id:userId.user_id } });
         } else {
             navigate("/MultiChoFalse", { state: { score: nextScore } });
         }
         } else {
             if(isCorrect){
                 alert("정답");
+                setWordList(newStudyWord);
             }
             else{
                 alert(`오답! 정답은: ${currentQuiz.options[currentQuiz.answer_index]}`);

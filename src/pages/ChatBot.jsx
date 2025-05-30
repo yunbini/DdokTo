@@ -105,7 +105,8 @@ function ChatBot(){
                 const res = await axios.post('https://server-gxfs.onrender.com/grade/predict_grade_bulk', {
                     answers: userMessages
                 });
-                const level = res.data.label_index === 1 ? 3 : 0;
+                // const level = res.data.label_index === 1 ? 3 : 0;
+                const level = 0;
                 console.log(userMessages);
                 navigate("/WordMultiCho",{state:{category,level,userId}});
             }

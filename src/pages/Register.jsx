@@ -79,7 +79,7 @@ function Register(){
             <SubmitBtn children={'로그인'}
                 onClick={(e)=>{
                     e.preventDefault();
-                    navigate("/Login");
+                    navigate("/");
                 }}
                 type='button'
             />

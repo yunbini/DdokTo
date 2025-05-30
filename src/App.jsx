@@ -11,6 +11,7 @@ import SentenMultiChoice from './pages/SentenMultiChoice';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ChatBot from './pages/ChatBot';
+import SentenChoiceRst from './pages/SentenChoiceRst';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             <Route path="/" element={<Login />} />
             <Route path="/Register" element={<Register />} />
             <Route path="/ChatBot" element={<ChatBot />} />
+            <Route path="/SentenceRst" element={<SentenChoiceRst />} />
           </Routes>
       </BrowserRouter>
     </>

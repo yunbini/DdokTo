@@ -6,6 +6,7 @@ import PaddingBox from "../PaddingBox";
 
 const StyledBack = styled.div`
         background-color:#F3FF89;
+        height:100vh;
     `
     const ScoreP = styled.p`
         font-size:48px;
@@ -23,7 +24,6 @@ function MultiChoiceResult({score,ment}){
         <StyledBack>
             <PaddingBox padding='60px 0px'>
             <img src={SitRabit} style={{width:'301px',height:'282px'}}></img>
-                <ScoreP>{score}/10</ScoreP>
                 <Resultment>{ment}</Resultment>
                 <Choices>
                     {/* <ChoiceBox children={choice1}/>
