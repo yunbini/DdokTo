@@ -24,7 +24,7 @@ function App() {
             <Route path="/MultiChoFalse" element={<MultiChoiceFalse />} />
             <Route path="/MultiChoSuc" element={<MultiChoiceSuc />}/>
             <Route path="/SentenMultiCho" element={<SentenMultiChoice />} />
-            <Route path="/Login" element={<Login />} />
+            <Route path="/" element={<Login />} />
             <Route path="/Register" element={<Register />} />
             <Route path="/ChatBot" element={<ChatBot />} />
           </Routes>

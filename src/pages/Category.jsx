@@ -20,6 +20,7 @@ function Category(){
 
     const location = useLocation();
     const userId = location.state;
+    console.log(userId);
     
     const CateSubmit = (category) => {
         navigate('/ChatBot',{state:{category,userId}})
@@ -32,16 +33,16 @@ function Category(){
                     <img src={StandingRabit} style={{width:'169px',height:'230px',margin:'40px 0px'}}></img>
                     <p style={{fontSize:'24px',margin:0}}>카테고리를 선택해줘!</p>
                     <CategoryFlex>
-                        <CategoryBox category={'일상'} children={'일상에서 자주 쓰이는 어휘에 대해 알아보아요.'}
-                            onClick={() => CateSubmit('일상')}/>
+                        <CategoryBox category={'일상대화'} children={'일상대화에서 자주 쓰이는 어휘에 대해 알아보아요.'}
+                            onClick={() => CateSubmit('일상대화')}/>
                         <CategoryBox category={'사회'} children={'사회적인 어휘에 대해 알아보아요.'}
                             onClick={() => CateSubmit('사회')}/>
                         <CategoryBox category={'자연'} children={'자연 환경에서 느낄 수 있는 어휘에 대해 알아보아요.'}
                             onClick={() => CateSubmit('자연')}/>
-                        <CategoryBox category={'과학'} children={'과학적인 어휘에 대해 알아보아요.'}
-                            onClick={() => CateSubmit('과학')}/>
-                        <CategoryBox category={'인문'} children={'인문학에 대한 어휘에 대해 알아보아요.'}
-                            onClick={() => CateSubmit('인문')}/>
+                        <CategoryBox category={'건강'} children={'건강 어휘에 대해 알아보아요.'}
+                            onClick={() => CateSubmit('건강')}/>
+                        <CategoryBox category={'예술'} children={'예술학에 대한 어휘에 대해 알아보아요.'}
+                            onClick={() => CateSubmit('예술')}/>
                     </CategoryFlex>
                 </PaddingBox>
             </StyledBack>

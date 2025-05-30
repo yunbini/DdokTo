@@ -2,11 +2,9 @@ import React from "react";
 import styled from "styled-components";
 import SitRabit from "../../assets/sittingRabit.png";
 import PaddingBox from "../PaddingBox";
-import ChoiceBox from "./ChoiceBox";
+// import ChoiceBox from "./ChoiceBox";
 
-
-function MultiChoiceResult({score,ment,choice1}){
-    const StyledBack = styled.div`
+const StyledBack = styled.div`
         background-color:#F3FF89;
     `
     const ScoreP = styled.p`
@@ -19,6 +17,8 @@ function MultiChoiceResult({score,ment,choice1}){
     const Choices = styled.div`
         margin:20px 0px;
     `
+
+function MultiChoiceResult({score,ment}){
     return(
         <StyledBack>
             <PaddingBox padding='60px 0px'>
@@ -26,8 +26,8 @@ function MultiChoiceResult({score,ment,choice1}){
                 <ScoreP>{score}/10</ScoreP>
                 <Resultment>{ment}</Resultment>
                 <Choices>
-                    <ChoiceBox children={choice1}/>
-                    <ChoiceBox children='목록으로' />
+                    {/* <ChoiceBox children={choice1}/>
+                    <ChoiceBox children='목록으로' /> */}
                 </Choices>
             </PaddingBox>
         </StyledBack>
