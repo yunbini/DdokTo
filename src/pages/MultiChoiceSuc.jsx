@@ -8,6 +8,7 @@ import PaddingBox from "../components/PaddingBox";
 
 const StyledBack = styled.div`
         background-color:#F3FF89;
+        min-height: 100vh;
     `
     const ScoreP = styled.p`
         font-size:48px;

@@ -1,158 +1,171 @@
-import { useEffect,useState } from "react";
-import { useNavigate,useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import PaddingBox from "../components/PaddingBox";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+
+const popEffect = keyframes`
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+`;
+
+const StyledBtn = styled.button`
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 335px;
+    height: 56px;
+    border-radius: 12px;
+    font-size: 18px;
+    margin: 20px auto;
+    cursor: ${({ $isDisabled }) => ($isDisabled ? 'not-allowed' : 'pointer')};
+    transition: background-color 0.3s, transform 0.2s;
+
+    background-color: ${({ $isSelected, $isCorrectAnswer, $isCorrect }) => {
+        if ($isSelected) {
+            return $isCorrect ? '#4CAF50' : '#FF5252';
+        }
+        if ($isCorrectAnswer) {
+            return '#4CAF50';
+        }
+        return '#FFC156';
+    }};
+    color: ${({ $isSelected, $isCorrectAnswer }) => ($isSelected || $isCorrectAnswer) ? '#fff' : '#000'};
+    animation: ${({ $isSelected }) => ($isSelected ? popEffect : 'none')} 0.3s ease;
+`;
 
 const StyledBack = styled.div`
-        background-color:#F3FF89;
-    `
+    background-color: #F3FF89;
+    min-height: 100vh;
+`;
+
 const StyledP = styled.p`
-        font-size:${props => props.fontSize || '20px'};
-        margin:110px 0px;
-    `
-const StyledBtn = styled.button`
-        border:none;
-        display:flex;
-        justify-content:center;
-        align-items:center;
+    font-size: ${props => props.fontSize || '20px'};
+    margin: 110px 0px;
+`;
 
-        width:335px; height:56px;
-        border-radius: 12px;
-        background-color: #FFC156;
-        font-size:18px;
-        margin:20px auto;
-    `  
-
-function WordMultiChoice(){
-
+function WordMultiChoice() {
     const location = useLocation();
     const navigate = useNavigate();
     const { level, category, userId } = location.state || {};
 
-    const [quizList,setQuizList] = useState([]);
-    const [wordList,setWordList] = useState([]);
-    const [currentIndex,setCurrentIndex] = useState(0);
-    const [score,setScore] = useState(0);
-    const [loading,setLoading] = useState(true);
+    const [quizList, setQuizList] = useState([]);
+    const [wordList, setWordList] = useState([]);
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [score, setScore] = useState(0);
+    const [loading, setLoading] = useState(true);
+    const [selectedIndex, setSelectedIndex] = useState(null);
+    const [correctIndex, setCorrectIndex] = useState(null);
+    const [isClickable, setIsClickable] = useState(true);
 
-    console.log(userId);
+    useEffect(() => {
+        const StudyWords = async () => {
+            try {
+                const response = await axios.get('https://server-gxfs.onrender.com/api/words', {
+                    params: { category, level }
+                });
 
-    useEffect(()=>{
-           const StudyWords = async() =>{
-            try{
-            const response = await axios.get('https://server-gxfs.onrender.com/api/words',
-                {
-                    params:{category,level}
+                if (response.data.message) {
+                    alert(response.data.message);
+                } else {
+                    setQuizList(response.data);
                 }
-            );
-            
-            if(response.data.message){
-                alert(response.data.message);
-                console.log(response);
-                console.log(userId);
-            }
-            else{
-                setQuizList(response.data);
-            }
-            }
-            catch(error){
-                console.error('사용자 등록 에러:',error);
+            } catch (error) {
+                console.error('단어 불러오기 실패:', error);
                 alert('단어 불러오기 실패');
-            }
-            finally{
+            } finally {
                 setLoading(false);
             }
-            };
-            StudyWords();
-        },[category,level])
+        };
+        StudyWords();
+    }, [category, level]);
 
-    const handleAnswer = async(selectedIndex) => {
+    const handleAnswer = async (selectedIdx) => {
+        if (!isClickable) return;
+        setIsClickable(false);
+
         const currentQuiz = quizList[currentIndex];
-        const isCorrect = selectedIndex === currentQuiz.answer_index;
+        const isCorrect = selectedIdx === currentQuiz.answer_index;
 
-        const nextScore = isCorrect ? score+1 : score;
-        const StudyWord = currentQuiz.word;
-        const newStudyWord = [...wordList,StudyWord];
+        setSelectedIndex(selectedIdx);
+        setCorrectIndex(currentQuiz.answer_index);
 
+        const nextScore = isCorrect ? score + 1 : score;
+        const newStudyWord = [...wordList, currentQuiz.word];
 
-        try{
-            const res = await axios.post('https://server-gxfs.onrender.com/api/quiz/submit',{
-                    user_id: userId.user_id,
-                    word: currentQuiz.word,
-                    level,
-                    category,
-                    selected_index: selectedIndex,
-                    answer_index: currentQuiz.answer_index,
-                    is_correct: isCorrect,
-                    round: currentIndex + 1,
+        const payload = {
+            user_id: userId,  // ⚠ userId 형태 반드시 숫자인지 확인
+            word: currentQuiz.word,
+            level: Number(level),
+            category: String(category),
+            selected_index: Number(selectedIdx),
+            answer_index: Number(currentQuiz.answer_index),
+            is_correct: Boolean(isCorrect),
+            round: currentIndex + 1,
+        };
+
+        console.log("📦 Submitting payload:", payload);
+
+        try {
+            await axios.post('https://server-gxfs.onrender.com/api/quiz/submit', payload);
+        } catch (err) {
+            console.error("❌ Submit error:", err);
+        }
+
+        setTimeout(() => {
+            const totalQuestions = quizList.length;
+            if (currentIndex + 1 === totalQuestions) {
+                if (nextScore === totalQuestions) {
+                    navigate("/MultiChoSuc", {
+                        state: { score: nextScore, words: newStudyWord, level, category, user_id: userId }
+                    });
+                } else {
+                    navigate("/MultiChoFalse", { state: { score: nextScore } });
+                }
+            } else {
+                if (isCorrect) {
+                    setWordList(newStudyWord);
+                }
+                setScore(nextScore);
+                setCurrentIndex(prevIndex => prevIndex + 1);
+                setSelectedIndex(null);
+                setCorrectIndex(null);
+                setIsClickable(true);
             }
+        }, 1000);
+    };
 
-        )
-        
-        console.log(res);
-
-        }
-         catch(err){
-                console.log(err);
-        }
-
-        if (currentIndex + 1 === quizList.length) {
-        if (nextScore === 10) {
-            navigate("/MultiChoSuc", { state: { score: nextScore, words: newStudyWord, level:level, category:category, user_id:userId.user_id } });
-        } else {
-            navigate("/MultiChoFalse", { state: { score: nextScore } });
-        }
-        } else {
-            if(isCorrect){
-                alert("정답");
-                setWordList(newStudyWord);
-            }
-            else{
-                alert(`오답! 정답은: ${currentQuiz.options[currentQuiz.answer_index]}`);
-
-            }
-            setScore(nextScore);
-            setCurrentIndex(prevIndex => prevIndex + 1);
-        }
-
+    if (loading) {
+        return <div>퀴즈 로딩중 ..</div>;
     }
 
-        if(loading){
-        return(
-            <div> 퀴즈 로딩중 ..</div>
-        )
-       }
+    const currentQuiz = quizList[currentIndex];
 
-        const currentQuiz = quizList[currentIndex];
-        // console.log(currentQuiz);
-
-
-    return(
-        <>
-            <StyledBack>
-                <PaddingBox padding='60px 0px'>
-                    <p>난이도:{level}, 카테고리:{category}</p>
-                    <p>{currentIndex+1}/10</p>
-                    <p>점수:{score}</p>
-                    <StyledP>{currentQuiz.word}</StyledP>
-                    {
-                        currentQuiz.options.map((option,i)=> 
-                        {
-                            return(
-                                <StyledBtn
-                                    key={i}
-                                    onClick={()=>handleAnswer(i)}
-                                    >
-                                    {option}
-                                </StyledBtn>
-                            )
-                        }
-                    )
-                    }
-                </PaddingBox>
-            </StyledBack>
-        </>
-    )
+    return (
+        <StyledBack>
+            <PaddingBox padding='60px 0px'>
+                <p>난이도: {level}, 카테고리: {category}</p>
+                <p>{currentIndex + 1}/{quizList.length}</p>
+                <p>점수: {score}</p>
+                <StyledP>{currentQuiz.word}</StyledP>
+                {currentQuiz.options.map((option, i) => (
+                    <StyledBtn
+                        key={i}
+                        onClick={() => handleAnswer(i)}
+                        disabled={!isClickable}
+                        $isDisabled={!isClickable}
+                        $isSelected={selectedIndex === i}
+                        $isCorrectAnswer={correctIndex === i}
+                        $isCorrect={i === correctIndex}
+                    >
+                        {option}
+                    </StyledBtn>
+                ))}
+            </PaddingBox>
+        </StyledBack>
+    );
 }
+
 export default WordMultiChoice;
