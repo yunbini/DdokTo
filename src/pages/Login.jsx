@@ -39,8 +39,8 @@ function Login(){
             // 성공적인 응답 처리
             console.log('사용자 등록:', response.data);
             const user_id = response.data.user_id;
-            alert("로그인이 완료되었습니다.");
-            navigate("/Category",{state:{user_id}});
+            //alert("로그인이 완료되었습니다.");
+            navigate("/Intro",{state:{user_id}});
         } catch (error) {
             // 에러 처리
             console.error('사용자 등록 에러:', error);
