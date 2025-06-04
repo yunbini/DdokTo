@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
+import SitRabit from "../assets/sittingRabit.png";
 
 const Container = styled.div`
     display: flex;
@@ -77,7 +78,7 @@ function OutroPage() {
                 똑토는 항상 네 옆에서 응원할게! 다음에도 같이 달려보자 🐇<br /><br />
             </SpeechBubble>
 
-            <BunnyImage src="src/assets/sittingRabit.png" alt="똑토" />
+            <BunnyImage src={SitRabit} alt="똑토" />
 
             <StartButton onClick={handleStart}>처음으로</StartButton>
         </Container>

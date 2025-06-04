@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import SitRabit from "../assets/sittingRabit.png";
 
 const Container = styled.div`
     display: flex;
@@ -46,7 +47,7 @@ function StartPage() {
 
     return (
         <Container>
-            <BunnyImage src="src/assets/standingRabit.png" alt="토끼 이미지" />
+            <BunnyImage src={SitRabit} alt="토끼 이미지" />
             <Title>❤ 똑토와 놀자 ❤</Title>
             <StartButton onClick={handleStart}>시작하기</StartButton>
         </Container>

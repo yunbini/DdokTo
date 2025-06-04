@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
+import SitRabit from "../assets/sittingRabit.png";
 
 const Container = styled.div`
     display: flex;
@@ -84,7 +85,7 @@ function IntroPage() {
                 시작할게~
             </SpeechBubble>
 
-            <BunnyImage src="src/assets/sittingRabit.png" alt="똑토" />
+            <BunnyImage src={SitRabit} alt="똑토" />
 
             <StartButton onClick={handleStart}>시작하기</StartButton>
         </Container>
