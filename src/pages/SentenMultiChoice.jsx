@@ -98,7 +98,7 @@ function SentenMultiChoice() {
     };
 
     const handleFinish = () => {
-        navigate("/Outro");
+        navigate("/Outro",{state:{userId: user_id}});
     };
 
     const isLastQuestion = currentIndex + 1 === words.length;

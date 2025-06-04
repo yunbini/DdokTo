@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Container = styled.div`
     display: flex;
@@ -60,9 +60,12 @@ const StartButton = styled.button`
 
 function OutroPage() {
     const navigate = useNavigate();
+    const location = useLocation();
+    const {userId} = location.state;
+    console.log(userId);
 
     const handleStart = () => {
-        navigate("/Category"); // 원하는 경로로 수정해줘
+        navigate("/Category",{state:{userId}}); // 원하는 경로로 수정해줘
     };
 
     return (

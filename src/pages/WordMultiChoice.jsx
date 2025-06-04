@@ -122,7 +122,7 @@ function WordMultiChoice() {
                         state: { score: nextScore, words: newStudyWord, level, category, user_id: userId }
                     });
                 } else {
-                    navigate("/MultiChoFalse", { state: { score: nextScore } });
+                    navigate("/MultiChoFalse", { state: { score: nextScore, level, category, userId } });
                 }
             } else {
                 if (isCorrect) {
