@@ -1,5 +1,3 @@
-import React from "react";
-import MultiChoiceResult from "../components/multiChoice/MultiChoiceResult";
 import styled from "styled-components";
 import SitRabit from "../assets/sittingRabit.png"
 import { useLocation } from "react-router-dom";

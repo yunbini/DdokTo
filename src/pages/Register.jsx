@@ -49,7 +49,7 @@ function Register(){
             // 성공적인 응답 처리
             console.log('사용자 등록:', response.data);
             alert("회원가입이 완료되었습니다.");
-            navigate("/Login");
+            navigate("/");
         } catch (error) {
             // 에러 처리
             console.error('사용자 등록 에러:', error);
