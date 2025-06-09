@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 
 const StyledBack = styled.div`
+        height:100vh;
         background-color:#F3FF89;
     `
     const ScoreP = styled.p`
@@ -32,8 +33,8 @@ function MultiChoiceFalse(){
     
     const navigate = useNavigate();
     const location = useLocation();
-    const {score,level,category,userId} = location.state;
-    console.log(score,level,category,userId);
+    const {score,level,category,userId,words,options,answer_indexs} = location.state;
+    console.log(score,level,category,userId,words,options,answer_indexs,words.length);
     return(
         <StyledBack>
             <PaddingBox padding='60px 0px'>
@@ -42,7 +43,11 @@ function MultiChoiceFalse(){
                 <Resultment>우리 다시 한 번 학습해보자!</Resultment>
                 <Choices>
                     <StyledBtn
-                        onClick={() => navigate("/WordMultiCho", {state:{level,category,userId}})}
+                        onClick={() => navigate("/WordMultiCho", 
+                            {state:
+                                {level,category,userId,
+                                    words,options,answer_indexs,wordslength:words.length
+                                }})}
                     >다시 학습하기</StyledBtn>
                     <StyledBtn
                         onClick={() => navigate("/Category")}

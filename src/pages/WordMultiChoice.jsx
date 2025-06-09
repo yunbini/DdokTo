@@ -49,10 +49,15 @@ const StyledP = styled.p`
 function WordMultiChoice() {
     const location = useLocation();
     const navigate = useNavigate();
-    const { level, category, userId } = location.state || {};
+    const { level, category, userId, words, options, answer_indexs, wordslength } = location.state || {};
+    console.log(words, options, answer_indexs, wordslength)
 
     const [quizList, setQuizList] = useState([]);
     const [wordList, setWordList] = useState([]);
+    const [falseList,setFalseList] = useState([]);
+    const [optionList,setOptionList] = useState([]);
+    const [answerIndexList,setAnswerIndexList] = useState([]);
+
     const [currentIndex, setCurrentIndex] = useState(0);
     const [score, setScore] = useState(0);
     const [loading, setLoading] = useState(true);
@@ -122,11 +127,22 @@ function WordMultiChoice() {
                         state: { score: nextScore, words: newStudyWord, level, category, user_id: userId }
                     });
                 } else {
-                    navigate("/MultiChoFalse", { state: { score: nextScore, level, category, userId } });
+                    navigate("/MultiChoFalse", { state:
+                         { score: nextScore, level, category, userId,
+                            words:isCorrect ? falseList : [...falseList,currentQuiz.word],
+                            options: isCorrect ? optionList : [...optionList,currentQuiz.options],
+                            answer_indexs: isCorrect ? answerIndexList : [...answerIndexList,currentQuiz.answer_index]
+                          } 
+                        });
                 }
             } else {
                 if (isCorrect) {
                     setWordList(newStudyWord);
+                }
+                else{
+                    setFalseList(prev => [...prev,currentQuiz.word]);
+                    setOptionList(prev => [...prev,currentQuiz.options]);
+                    setAnswerIndexList(prev => [...prev,currentQuiz.answer_index]);
                 }
                 setScore(nextScore);
                 setCurrentIndex(prevIndex => prevIndex + 1);
