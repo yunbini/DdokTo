@@ -49,11 +49,11 @@ const StyledP = styled.p`
 function WordMultiChoice() {
     const location = useLocation();
     const navigate = useNavigate();
-    const { level, category, userId, words, options, answer_indexs, wordslength } = location.state || {};
-    console.log(words, options, answer_indexs, wordslength)
-
+    const { level, category, userId, falsewords, options, answer_indexs, wordslength,words } = location.state || {};
+    console.log(falsewords,options,answer_indexs,words);
+    const [allWords,setAllWords] = useState([]);
     const [quizList, setQuizList] = useState([]);
-    const [wordList, setWordList] = useState([]);
+    const [wordList, setWordList] = useState([] || newStudyWord);
     const [falseList,setFalseList] = useState([]);
     const [optionList,setOptionList] = useState([]);
     const [answerIndexList,setAnswerIndexList] = useState([]);
@@ -66,7 +66,8 @@ function WordMultiChoice() {
     const [isClickable, setIsClickable] = useState(true);
 
     useEffect(() => {
-        const StudyWords = async () => {
+        if(!falsewords){
+            const StudyWords = async () => {
             try {
                 const response = await axios.get('https://server-gxfs.onrender.com/api/words', {
                     params: { category, level }
@@ -85,17 +86,21 @@ function WordMultiChoice() {
             }
         };
         StudyWords();
-    }, [category, level]);
+        }
+        else{
+            setLoading(false);
+        }
+    }, [category, level,falsewords]);
 
     const handleAnswer = async (selectedIdx) => {
         if (!isClickable) return;
         setIsClickable(false);
 
-        const currentQuiz = quizList[currentIndex];
-        const isCorrect = selectedIdx === currentQuiz.answer_index;
-
+        const currentQuiz = falsewords ? falsewords[currentIndex] : quizList[currentIndex];
+        const correctIndex = falsewords ? answer_indexs[currentIndex] : currentQuiz.answer_index;
+        const isCorrect = selectedIdx === correctIndex;
         setSelectedIndex(selectedIdx);
-        setCorrectIndex(currentQuiz.answer_index);
+        setCorrectIndex(correctIndex);
 
         const nextScore = isCorrect ? score + 1 : score;
         const newStudyWord = [...wordList, currentQuiz.word];
@@ -113,29 +118,36 @@ function WordMultiChoice() {
 
         console.log("📦 Submitting payload:", payload);
 
-        try {
+        if(!falsewords){
+            try {
             await axios.post('https://server-gxfs.onrender.com/api/quiz/submit', payload);
-        } catch (err) {
-            console.error("❌ Submit error:", err);
+            } catch (err) {
+                console.error("❌ Submit error:", err);
+            }
         }
 
         setTimeout(() => {
-            const totalQuestions = quizList.length;
+            const totalQuestions = falsewords? falsewords.length : quizList.length;
+            const successWords = [...(words ? words : allWords), currentWord];
+            const LastWords = words ? words : allWords;
             if (currentIndex + 1 === totalQuestions) {
                 if (nextScore === totalQuestions) {
                     navigate("/MultiChoSuc", {
-                        state: { score: nextScore, words: newStudyWord, level, category, user_id: userId }
+                        state: { score: nextScore, LastWords, level, category, user_id: userId, totalQuestions }
                     });
                 } else {
                     navigate("/MultiChoFalse", { state:
                          { score: nextScore, level, category, userId,
-                            words:isCorrect ? falseList : [...falseList,currentQuiz.word],
+                            falsewords:isCorrect ? falseList : [...falseList,currentQuiz.word],
                             options: isCorrect ? optionList : [...optionList,currentQuiz.options],
-                            answer_indexs: isCorrect ? answerIndexList : [...answerIndexList,currentQuiz.answer_index]
+                            answer_indexs: isCorrect ? answerIndexList : [...answerIndexList,currentQuiz.answer_index],
+                            successWords,
+                            totalQuestions
                           } 
                         });
                 }
             } else {
+                setAllWords(prev => [...prev, currentWord]);
                 if (isCorrect) {
                     setWordList(newStudyWord);
                 }
@@ -158,15 +170,19 @@ function WordMultiChoice() {
     }
 
     const currentQuiz = quizList[currentIndex];
+    const currentWord = falsewords ? falsewords[currentIndex] : quizList[currentIndex].word;
+    const retryLength = falsewords ? wordslength : quizList.length;
+    const retryOptions = falsewords ? options[currentIndex] : currentQuiz.options;
+
 
     return (
         <StyledBack>
             <PaddingBox padding='60px 0px'>
                 <p>난이도: {level}, 카테고리: {category}</p>
-                <p>{currentIndex + 1}/{quizList.length}</p>
+                <p>{currentIndex + 1}/{retryLength}</p>
                 <p>점수: {score}</p>
-                <StyledP>{currentQuiz.word}</StyledP>
-                {currentQuiz.options.map((option, i) => (
+                <StyledP>{currentWord}</StyledP>
+                {retryOptions.map((option, i) => (
                     <StyledBtn
                         key={i}
                         onClick={() => handleAnswer(i)}

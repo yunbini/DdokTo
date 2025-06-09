@@ -33,20 +33,20 @@ function MultiChoiceFalse(){
     
     const navigate = useNavigate();
     const location = useLocation();
-    const {score,level,category,userId,words,options,answer_indexs} = location.state;
-    console.log(score,level,category,userId,words,options,answer_indexs,words.length);
+    const {score,level,category,userId,falsewords,options,answer_indexs, totalQuestions,successWords} = location.state;
+    console.log(score,level,category,userId,successWords,options,answer_indexs,falsewords.length,totalQuestions);
     return(
         <StyledBack>
             <PaddingBox padding='60px 0px'>
             <img src={SitRabit} style={{width:'301px',height:'282px'}}></img>
-                <ScoreP>{score}/10</ScoreP>
+                <ScoreP>{score}/{totalQuestions}</ScoreP>
                 <Resultment>우리 다시 한 번 학습해보자!</Resultment>
                 <Choices>
                     <StyledBtn
                         onClick={() => navigate("/WordMultiCho", 
                             {state:
                                 {level,category,userId,
-                                    words,options,answer_indexs,wordslength:words.length
+                                    falsewords,options,answer_indexs,wordslength:falsewords.length,words:successWords
                                 }})}
                     >다시 학습하기</StyledBtn>
                     <StyledBtn
